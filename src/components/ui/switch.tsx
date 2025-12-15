@@ -16,8 +16,8 @@ export function Switch({ checked = false, onCheckedChange }: SwitchProps) {
       role="switch"
       aria-checked={checked}
       onClick={toggle}
-      className={`h-6 w-11 rounded-full border border-slate-700 transition-colors ${
-        checked ? "bg-blue-600" : "bg-slate-800"
+      className={`h-6 w-11 rounded-full border border-slate-300 transition-colors ${
+        checked ? "bg-blue-600" : "bg-slate-200"
       } flex items-center px-1`}
     >
       <span
