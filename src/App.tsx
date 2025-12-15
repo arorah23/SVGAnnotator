@@ -525,15 +525,15 @@ const SelectionInfo = ({
 }: any) => (
   <Card className="bg-white/90 border-slate-200 shadow-xl">
     <CardHeader>
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-slate-500">SVG Overview</p>
           <CardTitle className="text-xl font-semibold text-slate-900">{svgStats.name || "Untitled"}</CardTitle>
           <p className="text-sm text-slate-600">{svgStats.message || "Click a shape to annotate it."}</p>
         </div>
-        <div className="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700">
+        <div className="flex items-start gap-3 bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700 self-start sm:self-auto">
           <Switch checked={editMode} onCheckedChange={setEditMode} />
-          <div>
+          <div className="leading-tight">
             <div className="font-semibold text-slate-900">{editMode ? "Edit" : "View"}</div>
             <div className="text-xs text-slate-500">Toggle to switch mode</div>
           </div>
@@ -603,12 +603,12 @@ const CommentsPanel = ({
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/15 border border-blue-500/30">
-            <MessageSquare className="h-4 w-4 text-blue-300" />
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 border border-blue-200">
+            <MessageSquare className="h-4 w-4 text-blue-600" />
           </div>
           <div>
-            <div className="text-sm font-semibold text-slate-100">Comments</div>
-            <div className="text-xs text-slate-400">Quick thoughts tied to this element</div>
+            <div className="text-sm font-semibold text-slate-900">Comments</div>
+            <div className="text-xs text-slate-500">Quick thoughts tied to this element</div>
           </div>
         </div>
         <Badge className="bg-slate-100 text-slate-700 border-slate-200">{comments.length} total</Badge>
@@ -616,23 +616,23 @@ const CommentsPanel = ({
 
       <div className="space-y-2 max-h-48 overflow-auto">
         {comments.length === 0 && (
-          <div className="rounded-xl border border-dashed border-slate-800 bg-slate-950/40 px-3 py-4 text-sm text-slate-500 text-center">
+          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-3 py-4 text-sm text-slate-600 text-center">
             No comments yet. Share quick feedback here.
           </div>
         )}
         {comments.map((c) => (
           <div
             key={c.id}
-            className="group rounded-xl border border-slate-800 bg-slate-950/70 p-3 shadow-sm shadow-black/20 transition-colors hover:border-slate-700"
+            className="group rounded-xl border border-slate-200 bg-white p-3 shadow-sm transition-colors hover:border-blue-200"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <div className="text-sm text-slate-100 leading-snug">{c.text}</div>
+                <div className="text-sm text-slate-900 leading-snug">{c.text}</div>
                 <div className="text-[11px] text-slate-500">{new Date(c.createdAt).toLocaleString()}</div>
               </div>
               {editable && (
                 <button
-                  className="mt-1 inline-flex rounded-lg border border-transparent p-1 text-xs text-slate-500 transition-colors hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-300"
+                  className="mt-1 inline-flex rounded-lg border border-transparent p-1 text-xs text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600"
                   onClick={() => onDelete(c.id)}
                   aria-label="Delete comment"
                 >
@@ -645,7 +645,7 @@ const CommentsPanel = ({
       </div>
 
       {editable && (
-        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 shadow-sm shadow-black/20 space-y-2">
+        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm space-y-2">
           <div className="flex items-center justify-between text-[11px] text-slate-500">
             <span>Drop a quick thought</span>
             <span>{draft.trim().length} chars</span>
@@ -655,7 +655,7 @@ const CommentsPanel = ({
             onChange={(e: any) => setDraft(e.target.value)}
             placeholder="Add a quick note or observation"
             disabled={disabled}
-            className="bg-slate-900/80 border-slate-800"
+            className="border-slate-300"
           />
           <div className="flex justify-end">
             <AnimatedButton onClick={submit} disabled={!draft.trim() || disabled}>
@@ -863,23 +863,23 @@ function DetailsPane({
       actions={!editMode && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">View only</Badge>}
     >
       <div className="space-y-4">
-        <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950/80 p-4 shadow-inner shadow-blue-500/10">
+        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-slate-400">
-                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Active element
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-slate-500">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Active element
               </div>
-              <div className="flex items-center gap-2 text-lg font-semibold text-slate-50">
-                <StickyNote className="h-4 w-4 text-blue-400" />
+              <div className="flex items-center gap-2 text-lg font-semibold text-slate-900">
+                <StickyNote className="h-4 w-4 text-blue-600" />
                 {data.title || "Untitled element"}
               </div>
               <div className="text-xs text-slate-500 break-all">Key: {selectedKey}</div>
             </div>
             <div className="flex flex-wrap justify-end gap-2">
-              <Badge className="bg-blue-500/15 text-blue-100 border-blue-500/40">
+              <Badge className="bg-blue-50 text-blue-700 border-blue-200">
                 {hasNotes ? "Notes added" : "No notes yet"}
               </Badge>
-              <Badge className="bg-slate-800/70 text-slate-200 border-slate-700">{commentCount} comments</Badge>
+              <Badge className="bg-slate-100 text-slate-700 border-slate-200">{commentCount} comments</Badge>
             </div>
           </div>
         </div>
@@ -891,7 +891,7 @@ function DetailsPane({
           onChange={(v) => editMode && update({ title: v })}
           placeholder="What is this?"
           readOnly={!editMode}
-          className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 shadow-sm shadow-black/30"
+          className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
         />
         <DetailsField
           label="Notes"
@@ -901,7 +901,7 @@ function DetailsPane({
           placeholder="Explain what this element means"
           textarea
           readOnly={!editMode}
-          className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 shadow-sm shadow-black/30"
+          className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm"
         />
         <CommentsPanel
           comments={data.comments || []}
