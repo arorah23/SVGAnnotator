@@ -250,18 +250,18 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
       .k{color:#0f172a;font-weight:600;}
     .muted{color:var(--muted);font-size:13px;line-height:1.45}
     .muted.small{font-size:12px}
-      .box{border:1px solid var(--border);border-radius:14px;padding:10px;background:#f8fafc;white-space:pre-wrap}
-      .hint{margin-top:10px;color:var(--muted);font-size:12px}
-      .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;border:1px solid var(--border);padding:6px 12px;font-size:12px;color:#0f172a;background:#f8fafc;}
-      .pill.soft{border-color:rgba(148,163,184,.3);background:rgba(148,163,184,.15);color:#0f172a;}
-      .detailWrap{display:flex;flex-direction:column;gap:10px}
-      .detailHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-      .detailStats{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
-      .detailKey{font-size:13px;color:#0f172a;word-break:break-all;margin-top:4px}
-      .noteCard{border:1px solid var(--border);border-radius:14px;padding:10px;background:#f8fafc;box-shadow:0 10px 25px rgba(15,23,42,.08)}
-      .commentList{display:flex;flex-direction:column;gap:10px}
-      .commentCard{padding:10px;border-radius:12px;border:1px solid var(--border);background:white;color:#0f172a;font-size:13px;line-height:1.45;box-shadow:0 6px 16px rgba(15,23,42,.06)}
-      .commentCard .ts{display:block;color:var(--muted);font-size:11px;margin-top:6px}
+    .box{border:1px solid var(--border);border-radius:14px;padding:10px;background:rgba(2,6,23,.35);white-space:pre-wrap}
+    .hint{margin-top:10px;color:var(--muted);font-size:12px}
+    .pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;border:1px solid var(--border);padding:6px 12px;font-size:12px;color:#cbd5e1;background:rgba(15,23,42,.5);}
+    .pill.soft{border-color:rgba(148,163,184,.3);background:rgba(148,163,184,.08);}
+    .detailWrap{display:flex;flex-direction:column;gap:10px}
+    .detailHeader{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .detailStats{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end}
+    .detailKey{font-size:13px;color:#cbd5e1;word-break:break-all;margin-top:4px}
+    .noteCard{border:1px solid var(--border);border-radius:14px;padding:10px;background:rgba(2,6,23,.35);box-shadow:0 10px 25px rgba(0,0,0,.2)}
+    .commentList{display:flex;flex-direction:column;gap:10px}
+    .commentCard{padding:10px;border-radius:12px;border:1px solid var(--border);background:rgba(15,23,42,.6);color:#e2e8f0;font-size:13px;line-height:1.45}
+    .commentCard .ts{display:block;color:var(--muted);font-size:11px;margin-top:6px}
 
     #svgHost svg [id],
     #svgHost svg [data-annot-key]{ transition: filter .15s ease, outline .15s ease; cursor:pointer; pointer-events:all; }
@@ -607,8 +607,8 @@ const CommentsPanel = ({
             <MessageSquare className="h-4 w-4 text-blue-300" />
           </div>
           <div>
-            <div className="text-sm font-semibold text-slate-900">Comments</div>
-            <div className="text-xs text-slate-500">Quick thoughts tied to this element</div>
+            <div className="text-sm font-semibold text-slate-100">Comments</div>
+            <div className="text-xs text-slate-400">Quick thoughts tied to this element</div>
           </div>
         </div>
         <Badge className="bg-slate-100 text-slate-700 border-slate-200">{comments.length} total</Badge>
@@ -616,23 +616,23 @@ const CommentsPanel = ({
 
       <div className="space-y-2 max-h-48 overflow-auto">
         {comments.length === 0 && (
-          <div className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-3 py-4 text-sm text-slate-600 text-center">
+          <div className="rounded-xl border border-dashed border-slate-800 bg-slate-950/40 px-3 py-4 text-sm text-slate-500 text-center">
             No comments yet. Share quick feedback here.
           </div>
         )}
         {comments.map((c) => (
           <div
             key={c.id}
-            className="group rounded-xl border border-slate-200 bg-white p-3 shadow-sm shadow-black/5 transition-colors hover:border-blue-200"
+            className="group rounded-xl border border-slate-800 bg-slate-950/70 p-3 shadow-sm shadow-black/20 transition-colors hover:border-slate-700"
           >
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <div className="text-sm text-slate-900 leading-snug">{c.text}</div>
+                <div className="text-sm text-slate-100 leading-snug">{c.text}</div>
                 <div className="text-[11px] text-slate-500">{new Date(c.createdAt).toLocaleString()}</div>
               </div>
               {editable && (
                 <button
-                  className="mt-1 inline-flex rounded-lg border border-transparent p-1 text-xs text-slate-500 transition-colors hover:border-red-500/30 hover:bg-red-50 hover:text-red-500"
+                  className="mt-1 inline-flex rounded-lg border border-transparent p-1 text-xs text-slate-500 transition-colors hover:border-red-500/30 hover:bg-red-500/10 hover:text-red-300"
                   onClick={() => onDelete(c.id)}
                   aria-label="Delete comment"
                 >
@@ -645,7 +645,7 @@ const CommentsPanel = ({
       </div>
 
       {editable && (
-        <div className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm shadow-black/10 space-y-2">
+        <div className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 shadow-sm shadow-black/20 space-y-2">
           <div className="flex items-center justify-between text-[11px] text-slate-500">
             <span>Drop a quick thought</span>
             <span>{draft.trim().length} chars</span>
@@ -655,7 +655,7 @@ const CommentsPanel = ({
             onChange={(e: any) => setDraft(e.target.value)}
             placeholder="Add a quick note or observation"
             disabled={disabled}
-            className="bg-white border-slate-200"
+            className="bg-slate-900/80 border-slate-800"
           />
           <div className="flex justify-end">
             <AnimatedButton onClick={submit} disabled={!draft.trim() || disabled}>
@@ -863,23 +863,23 @@ function DetailsPane({
       actions={!editMode && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">View only</Badge>}
     >
       <div className="space-y-4">
-        <div className="rounded-2xl border border-slate-200 bg-gradient-to-r from-blue-50 via-white to-indigo-50 p-4 shadow-inner shadow-blue-200/40">
+        <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950/80 p-4 shadow-inner shadow-blue-500/10">
           <div className="flex items-start justify-between gap-4">
             <div className="space-y-1">
-              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-slate-500">
-                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" /> Active element
+              <div className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-slate-400">
+                <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" /> Active element
               </div>
-              <div className="flex items-center gap-2 text-lg font-semibold text-slate-900">
-                <StickyNote className="h-4 w-4 text-blue-500" />
+              <div className="flex items-center gap-2 text-lg font-semibold text-slate-50">
+                <StickyNote className="h-4 w-4 text-blue-400" />
                 {data.title || "Untitled element"}
               </div>
               <div className="text-xs text-slate-500 break-all">Key: {selectedKey}</div>
             </div>
             <div className="flex flex-wrap justify-end gap-2">
-              <Badge className="bg-blue-50 text-blue-700 border-blue-200">
+              <Badge className="bg-blue-500/15 text-blue-100 border-blue-500/40">
                 {hasNotes ? "Notes added" : "No notes yet"}
               </Badge>
-              <Badge className="bg-slate-100 text-slate-700 border-slate-200">{commentCount} comments</Badge>
+              <Badge className="bg-slate-800/70 text-slate-200 border-slate-700">{commentCount} comments</Badge>
             </div>
           </div>
         </div>
@@ -891,7 +891,7 @@ function DetailsPane({
           onChange={(v) => editMode && update({ title: v })}
           placeholder="What is this?"
           readOnly={!editMode}
-          className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm shadow-black/10"
+          className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 shadow-sm shadow-black/30"
         />
         <DetailsField
           label="Notes"
@@ -901,7 +901,7 @@ function DetailsPane({
           placeholder="Explain what this element means"
           textarea
           readOnly={!editMode}
-          className="rounded-xl border border-slate-200 bg-white p-3 shadow-sm shadow-black/10"
+          className="rounded-xl border border-slate-800 bg-slate-950/70 p-3 shadow-sm shadow-black/30"
         />
         <CommentsPanel
           comments={data.comments || []}
