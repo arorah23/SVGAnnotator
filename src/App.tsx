@@ -268,7 +268,7 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
         <div class="title">Interactive SVG – click-to-explain</div>
         <div class="sub">Open this file in a browser. Click any icon/shape to see Notes + Comments on the right.</div>
       </div>
-      <div class="badge" style="align-self:flex-start;gap:6px"><span>Export:</span> <span class="k">All items</span></div>
+      <div class="badge"><span>Export:</span> <span class="k">All items</span></div>
     </div>
 
     <div class="grid">
@@ -330,17 +330,6 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
         var svg = svgHost.querySelector('svg');
         if(!svg) return;
 
-        // Ensure selectable elements feel clickable even if the source SVG lacked inline styles
-        Array.prototype.forEach.call(svg.querySelectorAll('[id], [data-annot-key]'), function(el){
-          var existing = el.getAttribute('style') || '';
-          el.setAttribute('style', existing + '; cursor:pointer; pointer-events:all; transition: filter .15s ease, outline .15s ease;');
-        });
-
-        // Keep the SVG aligned and keyboard focusable for accessibility/debugging
-        svg.setAttribute('tabindex', '0');
-        svg.style.display = 'block';
-        svg.style.margin = '0 auto';
-
         var selectedEl = null;
 
         function cssEscape(s){
@@ -357,12 +346,6 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
         }
 
         function findKey(el){
-          // Use closest when available so nested shapes map to their labelled parent
-          if(el && el.closest){
-            var hit = el.closest('[id], [data-annot-key]');
-            if(hit && hit !== svg) return getKey(hit);
-          }
-
           var cur = el;
           while(cur && cur !== svg){
             var k = getKey(cur);
@@ -421,15 +404,6 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
 
         svg.addEventListener('click', function(evt){
           var key = findKey(evt.target);
-          if(!key) return;
-          highlightByKey(key);
-          setDetails(key);
-        });
-
-        // Mirror click behavior when users focus and press Enter/Space on the SVG
-        svg.addEventListener('keydown', function(evt){
-          if(evt.key !== 'Enter' && evt.key !== ' ' && evt.code !== 'Space') return;
-          var key = findKey(document.activeElement);
           if(!key) return;
           highlightByKey(key);
           setDetails(key);
