@@ -1094,7 +1094,6 @@ export default function SvgAnnotator() {
                 </div>
               </div>
 
-
               {/* RIGHT: DETAILS */}
               <div className="md:col-span-4">
                 <Card className="rounded-2xl">
@@ -1109,6 +1108,7 @@ export default function SvgAnnotator() {
                       </div>
                     ) : (
                       <>
+                        {/* Edit-only extras */}
                         {editMode ? (
                           <div className="space-y-3">
                             <div className="flex items-center justify-between">
@@ -1129,6 +1129,7 @@ export default function SvgAnnotator() {
                           </div>
                         ) : null}
 
+                        {/* Notes */}
                         <div className="space-y-2">
                           <Label className="text-sm">Notes</Label>
 
@@ -1141,14 +1142,27 @@ export default function SvgAnnotator() {
                                 onChange={(e) => setNotesDraft(e.target.value)}
                               />
 
-                              <AnimatedButton className="w-full" onClick={saveNotesOnly}>
-                                Save notes
+                              {!notesDraft.trim() ? (
+                                <div className="text-xs text-muted-foreground">
+                                  Add notes under <span className="font-medium">Notes</span>.
+                                </div>
+                              ) : null}
+
+                              <AnimatedButton
+                                className="w-full"
+                                onClick={saveNotesOnly}
+                                disabled={
+                                  !selectedKey ||
+                                  (labelDraft === selectedTitle && notesDraft === selectedNotes)
+                                }
+                              >
+                                Add notes
                               </AnimatedButton>
                             </>
                           ) : (
                             <div className="rounded-2xl border bg-muted/10 p-3 text-sm">
-                              {selectedNotes?.trim() ? (
-                                <div className="whitespace-pre-wrap">{selectedNotes}</div>
+                              {selectedNotes.trim() ? (
+                                selectedNotes
                               ) : (
                                 <span className="text-muted-foreground">Add notes under Notes.</span>
                               )}
@@ -1156,6 +1170,7 @@ export default function SvgAnnotator() {
                           )}
                         </div>
 
+                        {/* Comments */}
                         <CommentsPanel
                           editable={editMode}
                           comments={selected?.comments || []}
@@ -1164,25 +1179,22 @@ export default function SvgAnnotator() {
                           onSaveComment={saveCommentOnly}
                         />
 
+                        {/* Save both */}
                         {editMode ? (
-                          <div className="flex flex-wrap gap-2">
-                            <AnimatedButton onClick={saveAll}>Save all</AnimatedButton>
-                            <AnimatedButton
-                              variant="secondary"
-                              onClick={saveCommentOnly}
-                              disabled={!commentDraft.trim()}
-                            >
-                              Add comment only
-                            </AnimatedButton>
-                            <AnimatedButton variant="outline" onClick={() => setSelectedKey(null)}>
-                              Deselect
-                            </AnimatedButton>
-                          </div>
-                        ) : (
-                          <div className="text-xs text-muted-foreground">
-                            Toggle Edit mode to change label, notes, or comments.
-                          </div>
-                        )}
+                          <AnimatedButton
+                            variant="secondary"
+                            className="w-full"
+                            onClick={saveAll}
+                            disabled={
+                              !selectedKey ||
+                              (!commentDraft.trim() &&
+                                labelDraft === selectedTitle &&
+                                notesDraft === selectedNotes)
+                            }
+                          >
+                            Save all
+                          </AnimatedButton>
+                        ) : null}
                       </>
                     )}
                   </CardContent>
@@ -1192,38 +1204,46 @@ export default function SvgAnnotator() {
           </CardContent>
         </Card>
 
+        {/* Export panel */}
         {exportOpen ? (
-          <div className="rounded-2xl border bg-muted/10 p-4 space-y-3">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <div className="text-sm font-medium">Export ready</div>
-                <div className="text-xs text-muted-foreground">{exportFilename}</div>
+          <Card className="rounded-2xl">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base">Export</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Export contains <span className="font-medium">ALL</span> notes and comments for the image.
+                </div>
+                <div className="flex flex-wrap items-center gap-2">
+                  <AnimatedButton variant="outline" onClick={handleCopyExport}>
+                    <Copy className="mr-2 h-4 w-4" /> Copy
+                  </AnimatedButton>
+                  <AnimatedButton variant="outline" onClick={handleDownloadExport}>
+                    <Download className="mr-2 h-4 w-4" /> Download
+                  </AnimatedButton>
+                  <AnimatedButton
+                    variant="outline"
+                    onClick={handlePreviewExport}
+                    disabled={exportFormat !== "html"}
+                  >
+                    <ExternalLink className="mr-2 h-4 w-4" /> Preview
+                  </AnimatedButton>
+                </div>
               </div>
 
-              <AnimatedButton variant="outline" onClick={() => setExportOpen(false)}>
-                Close
-              </AnimatedButton>
-            </div>
+              <Textarea
+                ref={exportTextareaRef}
+                value={exportText}
+                readOnly
+                className="min-h-[220px] font-mono text-xs"
+              />
 
-            <div className="flex flex-wrap gap-2">
-              <AnimatedButton variant="secondary" onClick={handleDownloadExport}>
-                <Download className="mr-2 h-4 w-4" /> Download
-              </AnimatedButton>
-              <AnimatedButton onClick={handleCopyExport}>
-                <Copy className="mr-2 h-4 w-4" /> Copy
-              </AnimatedButton>
-              <AnimatedButton variant="outline" onClick={handlePreviewExport}>
-                <ExternalLink className="mr-2 h-4 w-4" /> Preview
-              </AnimatedButton>
-            </div>
-
-            <Textarea
-              ref={exportTextareaRef}
-              value={exportText}
-              readOnly
-              className="min-h-[160px] font-mono text-xs"
-            />
-          </div>
+              <div className="text-xs text-muted-foreground">
+                Tip: For execs, use <span className="font-medium">HTML</span> export — they can open it in any browser and click items to see details.
+              </div>
+            </CardContent>
+          </Card>
         ) : null}
       </div>
     </div>
