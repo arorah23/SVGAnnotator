@@ -920,17 +920,15 @@ function DetailsPane({
 
 function ExportGenerator({ svgMarkup, annotations }: any) {
   const [format, setFormat] = useState<ExportFormat>("html");
-  const [resultText, setResultText] = useState("");
 
-  useEffect(() => {
-    if (!svgMarkup) {
-      setResultText("Upload and annotate to preview exports.");
-      return;
-    }
+  const resultText = useMemo(() => {
+    if (!svgMarkup) return "Upload and annotate to preview exports.";
 
-    if (format === "html") setResultText(buildHtmlPackage(svgMarkup, annotations));
-    if (format === "svg") setResultText(buildAnnotatedSvg(svgMarkup, annotations));
-    if (format === "json") setResultText(JSON.stringify({ exportedAt: nowIso(), annotations }, null, 2));
+    if (format === "html") return buildHtmlPackage(svgMarkup, annotations);
+    if (format === "svg") return buildAnnotatedSvg(svgMarkup, annotations);
+    if (format === "json") return JSON.stringify({ exportedAt: nowIso(), annotations }, null, 2);
+
+    return "";
   }, [format, svgMarkup, annotations]);
 
   function onCopy(fmt: ExportFormat) {
