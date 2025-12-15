@@ -268,7 +268,7 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
         <div class="title">Interactive SVG – click-to-explain</div>
         <div class="sub">Open this file in a browser. Click any icon/shape to see Notes + Comments on the right.</div>
       </div>
-      <div class="badge" style="align-self:flex-start;gap:6px"><span>Export:</span> <span class="k">All items</span></div>
+      <div class="badge"><span>Export:</span> <span class="k">All items</span></div>
     </div>
 
     <div class="grid">
@@ -330,17 +330,6 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
         var svg = svgHost.querySelector('svg');
         if(!svg) return;
 
-        // Ensure selectable elements feel clickable even if the source SVG lacked inline styles
-        Array.prototype.forEach.call(svg.querySelectorAll('[id], [data-annot-key]'), function(el){
-          var existing = el.getAttribute('style') || '';
-          el.setAttribute('style', existing + '; cursor:pointer; pointer-events:all; transition: filter .15s ease, outline .15s ease;');
-        });
-
-        // Keep the SVG aligned and keyboard focusable for accessibility/debugging
-        svg.setAttribute('tabindex', '0');
-        svg.style.display = 'block';
-        svg.style.margin = '0 auto';
-
         var selectedEl = null;
 
         function cssEscape(s){
@@ -357,12 +346,6 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
         }
 
         function findKey(el){
-          // Use closest when available so nested shapes map to their labelled parent
-          if(el && el.closest){
-            var hit = el.closest('[id], [data-annot-key]');
-            if(hit && hit !== svg) return getKey(hit);
-          }
-
           var cur = el;
           while(cur && cur !== svg){
             var k = getKey(cur);
@@ -421,15 +404,6 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
 
         svg.addEventListener('click', function(evt){
           var key = findKey(evt.target);
-          if(!key) return;
-          highlightByKey(key);
-          setDetails(key);
-        });
-
-        // Mirror click behavior when users focus and press Enter/Space on the SVG
-        svg.addEventListener('keydown', function(evt){
-          if(evt.key !== 'Enter' && evt.key !== ' ' && evt.code !== 'Space') return;
-          var key = findKey(document.activeElement);
           if(!key) return;
           highlightByKey(key);
           setDetails(key);
@@ -501,14 +475,9 @@ function DetailsField({
 }
 
 const Panel = ({ title, children, actions }: any) => (
-  <Card className="bg-slate-900/75 border-slate-800/80 shadow-2xl">
+  <Card className="bg-slate-900/70 border-slate-800 shadow-2xl">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <div className="flex items-center gap-2">
-        <div className="h-8 w-8 rounded-xl bg-blue-500/20 border border-blue-500/30 flex items-center justify-center text-blue-200 text-sm">
-          ★
-        </div>
-        <CardTitle className="text-lg font-semibold text-slate-100">{title}</CardTitle>
-      </div>
+      <CardTitle className="text-lg font-semibold text-slate-100">{title}</CardTitle>
       {actions}
     </CardHeader>
     <CardContent>{children}</CardContent>
@@ -523,58 +492,45 @@ const SelectionInfo = ({
   setSelectedKey,
   annotations,
 }: any) => (
-  <Card className="bg-slate-900/75 border-slate-800/80 shadow-2xl">
-    <CardHeader className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="space-y-1">
-          <p className="text-xs uppercase tracking-[0.2em] text-slate-400">SVG Overview</p>
-          <CardTitle className="text-2xl font-semibold text-slate-50">{svgStats.name || "Untitled"}</CardTitle>
+  <Card className="bg-slate-900/70 border-slate-800 shadow-2xl">
+    <CardHeader>
+      <div className="flex items-start justify-between gap-2">
+        <div>
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">SVG Overview</p>
+          <CardTitle className="text-xl font-semibold text-slate-100">{svgStats.name || "Untitled"}</CardTitle>
           <p className="text-sm text-slate-400">{svgStats.message || "Click a shape to annotate it."}</p>
         </div>
-        <div className="flex items-center gap-3 rounded-2xl border border-slate-700/80 bg-slate-800/40 px-4 py-3 text-sm text-slate-200 shadow-inner shadow-slate-950/50">
-          <div className={`h-9 w-9 rounded-xl flex items-center justify-center border ${editMode ? "border-blue-500/40 bg-blue-500/10 text-blue-100" : "border-emerald-400/40 bg-emerald-400/10 text-emerald-100"}`}>
-            {editMode ? "✏️" : "👁️"}
-          </div>
+        <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-300">
+          <Switch checked={editMode} onCheckedChange={setEditMode} />
           <div>
-            <div className="font-semibold text-slate-50">{editMode ? "Editing" : "Viewing"}</div>
+            <div className="font-semibold text-slate-100">{editMode ? "Edit" : "View"}</div>
             <div className="text-xs text-slate-400">Toggle to switch mode</div>
           </div>
-          <Switch checked={editMode} onCheckedChange={setEditMode} />
         </div>
       </div>
-
-      <div className="grid grid-cols-3 gap-3 text-sm text-slate-200">
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 px-4 py-3">
-          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Selectable</div>
-          <div className="text-lg font-semibold text-slate-50">{svgStats.nodes}</div>
-        </div>
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 px-4 py-3">
-          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Annotated</div>
-          <div className="text-lg font-semibold text-slate-50">{svgStats.annotated}</div>
-        </div>
-        <div className="rounded-xl border border-slate-800/80 bg-slate-900/70 px-4 py-3">
-          <div className="text-xs uppercase tracking-[0.18em] text-slate-500">Comments</div>
-          <div className="text-lg font-semibold text-slate-50">{svgStats.comments}</div>
-        </div>
+      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-slate-300">
+        <Badge className="bg-slate-800/60 border-slate-700 text-slate-200">{svgStats.nodes} items</Badge>
+        <Badge className="bg-slate-800/60 border-slate-700 text-slate-200">{svgStats.annotated} annotated</Badge>
+        <Badge className="bg-slate-800/60 border-slate-700 text-slate-200">{svgStats.comments} comments</Badge>
       </div>
     </CardHeader>
     <CardContent className="space-y-3">
       <div className="flex flex-wrap gap-2 text-sm text-slate-400">
-        <AnimatedPill onClick={() => setSelectedKey(null)} className="bg-slate-900/70 border-slate-800/80">
+        <AnimatedPill onClick={() => setSelectedKey(null)}>
           <div className="h-2 w-2 rounded-full bg-emerald-500" />
           <div>
             <div className="font-semibold text-slate-100">Deselect</div>
             <div className="text-xs text-slate-400">Clear active selection</div>
           </div>
         </AnimatedPill>
-        <AnimatedPill onClick={() => setSelectedKey(selectedKey)} className="bg-slate-900/70 border-slate-800/80">
+        <AnimatedPill onClick={() => setSelectedKey(selectedKey)}>
           <div className="h-2 w-2 rounded-full bg-blue-500" />
           <div>
             <div className="font-semibold text-slate-100">Focus active</div>
             <div className="text-xs text-slate-400">Keep current selection</div>
           </div>
         </AnimatedPill>
-        <AnimatedPill className="bg-slate-900/70 border-slate-800/80">
+        <AnimatedPill>
           <div className="h-2 w-2 rounded-full bg-amber-500" />
           <div>
             <div className="font-semibold text-slate-100">{selectedKey ? "Selected item" : "Waiting for click"}</div>
@@ -818,18 +774,7 @@ function SvgPane({ svgMarkup, selectedKey, setSelectedKey }: any) {
     el.setAttribute("data-annot-highlight", "true");
   }, [selectedKey, svgMarkup]);
 
-  return (
-    <div
-      className="relative overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-900/70 p-4 shadow-inner shadow-slate-950/40"
-      style={{
-        backgroundImage:
-          "radial-gradient(circle at 20% 20%, rgba(59,130,246,0.08), transparent 32%), radial-gradient(circle at 80% 0%, rgba(16,185,129,0.07), transparent 30%)",
-      }}
-    >
-      <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_1px_1px,_rgba(148,163,184,0.08)_1px,_transparent_0)] bg-[length:34px_34px]" />
-      <div ref={hostRef} className="relative z-10" />
-    </div>
-  );
+  return <div ref={hostRef} className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4" />;
 }
 
 function DetailsPane({
@@ -976,21 +921,19 @@ function Uploader({ onUpload }: { onUpload: (markup: string) => void }) {
   return (
     <div className="space-y-2">
       <div
-        className="border-2 border-dashed border-slate-700/80 rounded-3xl p-7 bg-slate-900/65 text-center text-slate-200 hover:border-blue-400 transition-colors cursor-pointer shadow-[0_15px_50px_-35px_rgba(59,130,246,0.6)]"
+        className="border-2 border-dashed border-slate-700 rounded-2xl p-6 bg-slate-900/50 text-center text-slate-300 hover:border-blue-500 transition-colors cursor-pointer"
         onDragOver={(e) => e.preventDefault()}
         onDrop={onDrop}
       >
         <div className="flex flex-col items-center gap-2">
-          <div className="h-12 w-12 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-200">
-            <Upload className="h-6 w-6" />
-          </div>
-          <div className="font-semibold text-lg text-slate-50">Drop SVG here or use the file picker</div>
+          <Upload className="h-8 w-8 text-blue-400" />
+          <div className="font-semibold text-slate-100">Drop SVG here or use the file picker</div>
           <div className="text-sm text-slate-400">We strip scripts and make elements clickable automatically.</div>
           <div className="mt-3">
             <input type="file" accept=".svg" onChange={onInputChange} className="hidden" id="svgUploader" />
             <label
               htmlFor="svgUploader"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-400 text-white font-semibold shadow-md shadow-blue-900/40 hover:shadow-lg hover:shadow-blue-900/40 transition"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-500 transition"
             >
               Choose SVG
             </label>
@@ -1024,30 +967,19 @@ export default function InteractiveSvgAnnotator() {
   }
 
   return (
-    <div className="min-h-screen text-white">
-      <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
-        <Card className="bg-slate-900/80 border-slate-800/80">
-          <CardHeader className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-2 rounded-full bg-slate-800/80 border border-slate-700/80 px-3 py-1 text-xs uppercase tracking-[0.2em] text-slate-300">
-                Interactive SVG · Click-to-explain
-              </div>
-              <h1 className="text-3xl font-bold leading-tight">Interactive SVG Annotator</h1>
-              <p className="text-sm text-slate-400 max-w-2xl">
-                Upload any SVG, click the shapes to add labels, notes, and comments, then export polished HTML/SVG/JSON bundles for your team.
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <Badge className="bg-emerald-500/15 text-emerald-100 border-emerald-500/30">Auto-sanitized uploads</Badge>
-              <Badge className="bg-blue-500/15 text-blue-100 border-blue-500/30">Click-to-explain ready</Badge>
-              {state.svg && (
-                <AnimatedButton className="bg-red-600 hover:bg-red-500" onClick={removeSvg}>
-                  <Trash2 className="h-4 w-4 mr-2" /> Reset SVG
-                </AnimatedButton>
-              )}
-            </div>
-          </CardHeader>
-        </Card>
+    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
+      <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Interactive SVG Annotator</h1>
+            <p className="text-sm text-slate-400">Upload an SVG, click elements, add notes, and export.</p>
+          </div>
+          {state.svg && (
+            <AnimatedButton className="bg-red-600 hover:bg-red-500" onClick={removeSvg}>
+              <Trash2 className="h-4 w-4 mr-2" /> Reset SVG
+            </AnimatedButton>
+          )}
+        </div>
 
         {!state.svg && <Uploader onUpload={handleUpload} />}
 
@@ -1062,7 +994,7 @@ export default function InteractiveSvgAnnotator() {
                 setSelectedKey={setSelectedKey}
                 annotations={state.annotations}
               />
-              <Card className="bg-slate-900/75 border-slate-800/80 shadow-2xl">
+              <Card className="bg-slate-900/70 border-slate-800 shadow-2xl">
                 <CardHeader>
                   <CardTitle className="text-lg text-slate-100">SVG Canvas</CardTitle>
                   <p className="text-sm text-slate-400">Click an element to select and annotate it.</p>

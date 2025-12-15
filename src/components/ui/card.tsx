@@ -9,12 +9,7 @@ type CardTitleProps = React.HTMLAttributes<HTMLParagraphElement>;
 type CardContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Card({ className = "", ...props }: CardProps) {
-  return (
-    <div
-      className={`rounded-2xl border border-slate-800/80 bg-slate-900/65 backdrop-blur-sm shadow-[0_18px_55px_-28px_rgba(0,0,0,0.8)] ${className}`}
-      {...props}
-    />
-  );
+  return <div className={`rounded-2xl border border-slate-800 bg-slate-900/60 ${className}`} {...props} />;
 }
 
 export function CardHeader({ className = "", ...props }: CardHeaderProps) {
