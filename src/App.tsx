@@ -234,21 +234,20 @@ function buildHtmlPackage(svgMarkup: string, annotations: Record<string, Annotat
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SVG Notes Package</title>
   <style>
-    :root{--card:#0f172a;--muted:#94a3b8;--border:rgba(148,163,184,.25);--accent:#3b82f6;}
-    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; background:linear-gradient(180deg,#0b1220,#060a13); color:white;}
-    .wrap{max-width:1200px;margin:0 auto;padding:18px;}
-    .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;}
-    .title{font-weight:700;letter-spacing:-.02em}
+    :root{--card:#ffffff;--muted:#475569;--border:rgba(148,163,184,.35);--accent:#2563eb;}
+    body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial; background:radial-gradient(circle at 20% 20%,#eef2ff,#f8fafc); color:#0f172a;}
+    .wrap{max-width:1200px;margin:0 auto;padding:24px;}
+    .top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;padding:16px 18px;border-radius:18px;background:linear-gradient(135deg,#e0f2fe,#f8fafc);border:1px solid var(--border);box-shadow:0 14px 40px rgba(15,23,42,.08);}
+    .title{font-weight:700;letter-spacing:-.02em;font-size:20px;color:#0f172a;}
     .sub{color:var(--muted);font-size:13px;margin-top:4px;max-width:70ch}
-    .grid{display:grid;grid-template-columns:1fr 360px;gap:14px;margin-top:14px;}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:14px;margin-top:14px;align-items:start;}
     @media (max-width: 980px){.grid{grid-template-columns:1fr;}}
-    .card{background:rgba(15,23,42,.6);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 30px rgba(0,0,0,.35);
-}
-    .card .hd{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:center;font-weight:700;}
-    .card .bd{padding:14px;}
-    .badge{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid var(--border);color:var(--muted);font-size:12px;}
-    .svgBox{background:rgba(2,6,23,.45);border:1px solid var(--border);border-radius:16px;padding:12px;overflow:auto;}
-    .k{color:#e2e8f0;}
+      .card{background:var(--card);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 30px rgba(15,23,42,.08);}
+      .card .hd{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:center;font-weight:700;color:#0f172a;}
+      .card .bd{padding:14px;}
+      .badge{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;border-radius:999px;border:1px solid var(--border);color:var(--muted);font-size:12px;background:rgba(148,163,184,.08);}
+      .svgBox{background:white;border:1px solid var(--border);border-radius:16px;padding:12px;overflow:auto;box-shadow:inset 0 1px 0 rgba(255,255,255,.6);}
+      .k{color:#0f172a;font-weight:600;}
     .muted{color:var(--muted);font-size:13px;line-height:1.45}
     .muted.small{font-size:12px}
     .box{border:1px solid var(--border);border-radius:14px;padding:10px;background:rgba(2,6,23,.35);white-space:pre-wrap}
@@ -494,22 +493,22 @@ function DetailsField({
   return (
     <div className={`space-y-1.5 ${className}`}>
       <div className="flex items-center gap-2">
-        <Label className="text-slate-300">{label}</Label>
+        <Label className="text-slate-700">{label}</Label>
         {hint && <span className="text-xs text-slate-500">{hint}</span>}
       </div>
       {textarea ? (
-        <Textarea className="min-h-[90px]" {...shared} />
+        <Textarea className="min-h-[90px] bg-white" {...shared} />
       ) : (
-        <Input {...shared} />
+        <Input className="bg-white" {...shared} />
       )}
     </div>
   );
 }
 
 const Panel = ({ title, children, actions }: any) => (
-  <Card className="bg-slate-900/70 border-slate-800 shadow-2xl">
+  <Card className="bg-white/90 border-slate-200 shadow-xl">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-      <CardTitle className="text-lg font-semibold text-slate-100">{title}</CardTitle>
+      <CardTitle className="text-lg font-semibold text-slate-800">{title}</CardTitle>
       {actions}
     </CardHeader>
     <CardContent>{children}</CardContent>
@@ -524,49 +523,49 @@ const SelectionInfo = ({
   setSelectedKey,
   annotations,
 }: any) => (
-  <Card className="bg-slate-900/70 border-slate-800 shadow-2xl">
+  <Card className="bg-white/90 border-slate-200 shadow-xl">
     <CardHeader>
       <div className="flex items-start justify-between gap-2">
         <div>
-          <p className="text-xs uppercase tracking-[0.18em] text-slate-400">SVG Overview</p>
-          <CardTitle className="text-xl font-semibold text-slate-100">{svgStats.name || "Untitled"}</CardTitle>
-          <p className="text-sm text-slate-400">{svgStats.message || "Click a shape to annotate it."}</p>
+          <p className="text-xs uppercase tracking-[0.18em] text-slate-500">SVG Overview</p>
+          <CardTitle className="text-xl font-semibold text-slate-900">{svgStats.name || "Untitled"}</CardTitle>
+          <p className="text-sm text-slate-600">{svgStats.message || "Click a shape to annotate it."}</p>
         </div>
-        <div className="flex items-center gap-2 bg-slate-800/50 border border-slate-700 rounded-xl px-3 py-2 text-sm text-slate-300">
+        <div className="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700">
           <Switch checked={editMode} onCheckedChange={setEditMode} />
           <div>
-            <div className="font-semibold text-slate-100">{editMode ? "Edit" : "View"}</div>
-            <div className="text-xs text-slate-400">Toggle to switch mode</div>
+            <div className="font-semibold text-slate-900">{editMode ? "Edit" : "View"}</div>
+            <div className="text-xs text-slate-500">Toggle to switch mode</div>
           </div>
         </div>
       </div>
-      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-slate-300">
-        <Badge className="bg-slate-800/60 border-slate-700 text-slate-200">{svgStats.nodes} items</Badge>
-        <Badge className="bg-slate-800/60 border-slate-700 text-slate-200">{svgStats.annotated} annotated</Badge>
-        <Badge className="bg-slate-800/60 border-slate-700 text-slate-200">{svgStats.comments} comments</Badge>
+      <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm text-slate-700">
+        <Badge className="bg-slate-100 border-slate-200 text-slate-700">{svgStats.nodes} items</Badge>
+        <Badge className="bg-slate-100 border-slate-200 text-slate-700">{svgStats.annotated} annotated</Badge>
+        <Badge className="bg-slate-100 border-slate-200 text-slate-700">{svgStats.comments} comments</Badge>
       </div>
     </CardHeader>
     <CardContent className="space-y-3">
-      <div className="flex flex-wrap gap-2 text-sm text-slate-400">
+      <div className="flex flex-wrap gap-2 text-sm text-slate-600">
         <AnimatedPill onClick={() => setSelectedKey(null)}>
           <div className="h-2 w-2 rounded-full bg-emerald-500" />
           <div>
-            <div className="font-semibold text-slate-100">Deselect</div>
-            <div className="text-xs text-slate-400">Clear active selection</div>
+            <div className="font-semibold text-slate-900">Deselect</div>
+            <div className="text-xs text-slate-500">Clear active selection</div>
           </div>
         </AnimatedPill>
         <AnimatedPill onClick={() => setSelectedKey(selectedKey)}>
           <div className="h-2 w-2 rounded-full bg-blue-500" />
           <div>
-            <div className="font-semibold text-slate-100">Focus active</div>
-            <div className="text-xs text-slate-400">Keep current selection</div>
+            <div className="font-semibold text-slate-900">Focus active</div>
+            <div className="text-xs text-slate-500">Keep current selection</div>
           </div>
         </AnimatedPill>
         <AnimatedPill>
           <div className="h-2 w-2 rounded-full bg-amber-500" />
           <div>
-            <div className="font-semibold text-slate-100">{selectedKey ? "Selected item" : "Waiting for click"}</div>
-            <div className="text-xs text-slate-400">
+            <div className="font-semibold text-slate-900">{selectedKey ? "Selected item" : "Waiting for click"}</div>
+            <div className="text-xs text-slate-500">
               {selectedKey
                 ? `${selectedKey} — ${(annotations[selectedKey]?.title || "(no label)").slice(0, 50)}`
                 : "Click an element inside the SVG"}
@@ -612,7 +611,7 @@ const CommentsPanel = ({
             <div className="text-xs text-slate-400">Quick thoughts tied to this element</div>
           </div>
         </div>
-        <Badge className="bg-slate-800/70 text-slate-200 border-slate-700">{comments.length} total</Badge>
+        <Badge className="bg-slate-100 text-slate-700 border-slate-200">{comments.length} total</Badge>
       </div>
 
       <div className="space-y-2 max-h-48 overflow-auto">
@@ -683,10 +682,10 @@ const ExportPanel = ({
   <Panel
     title="Export"
     actions={
-      <div className="flex items-center gap-2 text-xs text-slate-400">
+      <div className="flex items-center gap-2 text-xs text-slate-600">
         <span>Format</span>
         <select
-          className="rounded-lg border border-slate-800 bg-slate-900/70 px-2 py-1 text-slate-100"
+          className="rounded-lg border border-slate-200 bg-white px-2 py-1 text-slate-800"
           value={format}
           onChange={(e) => setFormat(e.target.value)}
         >
@@ -698,7 +697,7 @@ const ExportPanel = ({
     }
   >
     <div className="space-y-3">
-      <p className="text-sm text-slate-400">
+      <p className="text-sm text-slate-600">
         Export the annotated SVG as a shareable bundle. HTML includes a read-only viewer, SVG embeds metadata,
         and JSON captures raw notes.
       </p>
@@ -718,10 +717,10 @@ const ExportPanel = ({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-sm font-semibold text-slate-100">Preview</div>
-            <div className="text-xs text-slate-400">Shows the generated output</div>
+            <div className="text-sm font-semibold text-slate-900">Preview</div>
+            <div className="text-xs text-slate-500">Shows the generated output</div>
           </div>
-          <Badge className="bg-slate-800/70 text-slate-200 border-slate-700">
+          <Badge className="bg-slate-100 text-slate-700 border-slate-200">
             {format.toUpperCase()} Preview
           </Badge>
         </div>
@@ -825,7 +824,7 @@ function SvgPane({ svgMarkup, selectedKey, setSelectedKey }: any) {
     el.setAttribute("data-annot-highlight", "true");
   }, [selectedKey, svgMarkup]);
 
-  return <div ref={hostRef} className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4" />;
+  return <div ref={hostRef} className="bg-white border border-slate-200 rounded-2xl p-4 shadow-inner shadow-black/5" />;
 }
 
 function DetailsPane({
@@ -861,7 +860,7 @@ function DetailsPane({
   return (
     <Panel
       title={`Details — ${selectedKey}`}
-      actions={!editMode && <Badge className="bg-emerald-500/20 text-emerald-200 border-emerald-500/50">View only</Badge>}
+      actions={!editMode && <Badge className="bg-emerald-50 text-emerald-700 border-emerald-200">View only</Badge>}
     >
       <div className="space-y-4">
         <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-950 via-slate-900 to-slate-950/80 p-4 shadow-inner shadow-blue-500/10">
@@ -996,14 +995,14 @@ function Uploader({ onUpload }: { onUpload: (markup: string) => void }) {
   return (
     <div className="space-y-2">
       <div
-        className="border-2 border-dashed border-slate-700 rounded-2xl p-6 bg-slate-900/50 text-center text-slate-300 hover:border-blue-500 transition-colors cursor-pointer"
+        className="border-2 border-dashed border-slate-300 rounded-2xl p-6 bg-white/90 text-center text-slate-700 hover:border-blue-400 transition-colors cursor-pointer"
         onDragOver={(e) => e.preventDefault()}
         onDrop={onDrop}
       >
         <div className="flex flex-col items-center gap-2">
-          <Upload className="h-8 w-8 text-blue-400" />
-          <div className="font-semibold text-slate-100">Drop SVG here or use the file picker</div>
-          <div className="text-sm text-slate-400">We strip scripts and make elements clickable automatically.</div>
+          <Upload className="h-8 w-8 text-blue-500" />
+          <div className="font-semibold text-slate-900">Drop SVG here or use the file picker</div>
+          <div className="text-sm text-slate-600">We strip scripts and make elements clickable automatically.</div>
           <div className="mt-3">
             <input type="file" accept=".svg" onChange={onInputChange} className="hidden" id="svgUploader" />
             <label
@@ -1015,7 +1014,7 @@ function Uploader({ onUpload }: { onUpload: (markup: string) => void }) {
           </div>
         </div>
       </div>
-      {error && <div className="text-sm text-red-400">{error}</div>}
+      {error && <div className="text-sm text-red-500">{error}</div>}
     </div>
   );
 }
@@ -1042,15 +1041,15 @@ export default function InteractiveSvgAnnotator() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950 text-white">
-      <div className="max-w-6xl mx-auto px-4 py-6 space-y-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 text-slate-900">
+      <div className="max-w-6xl mx-auto px-4 py-8 space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Interactive SVG Annotator</h1>
-            <p className="text-sm text-slate-400">Upload an SVG, click elements, add notes, and export.</p>
+            <h1 className="text-3xl font-bold tracking-tight">Interactive SVG Annotator</h1>
+            <p className="text-sm text-slate-600">Upload an SVG, click elements, add notes, and export.</p>
           </div>
           {state.svg && (
-            <AnimatedButton className="bg-red-600 hover:bg-red-500" onClick={removeSvg}>
+            <AnimatedButton className="bg-rose-500 hover:bg-rose-400 text-white" onClick={removeSvg}>
               <Trash2 className="h-4 w-4 mr-2" /> Reset SVG
             </AnimatedButton>
           )}
@@ -1069,10 +1068,10 @@ export default function InteractiveSvgAnnotator() {
                 setSelectedKey={setSelectedKey}
                 annotations={state.annotations}
               />
-              <Card className="bg-slate-900/70 border-slate-800 shadow-2xl">
+              <Card className="bg-white/90 border-slate-200 shadow-xl">
                 <CardHeader>
-                  <CardTitle className="text-lg text-slate-100">SVG Canvas</CardTitle>
-                  <p className="text-sm text-slate-400">Click an element to select and annotate it.</p>
+                  <CardTitle className="text-lg text-slate-900">SVG Canvas</CardTitle>
+                  <p className="text-sm text-slate-600">Click an element to select and annotate it.</p>
                 </CardHeader>
                 <CardContent>
                   <SvgPane svgMarkup={state.svg} selectedKey={selectedKey} setSelectedKey={setSelectedKey} />
