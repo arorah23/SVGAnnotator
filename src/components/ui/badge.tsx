@@ -5,8 +5,8 @@ type BadgeProps = React.HTMLAttributes<HTMLSpanElement> & { variant?: "default" 
 export function Badge({ className = "", variant = "default", ...props }: BadgeProps) {
   const variantClasses =
     variant === "outline"
-      ? "border border-slate-700 text-slate-200"
-      : "bg-slate-800/70 text-slate-200 border border-slate-700";
+      ? "border border-slate-300 text-slate-700"
+      : "bg-slate-100 text-slate-800 border border-slate-200";
 
   return (
     <span

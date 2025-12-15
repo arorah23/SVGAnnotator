@@ -9,7 +9,7 @@ type CardTitleProps = React.HTMLAttributes<HTMLParagraphElement>;
 type CardContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 export function Card({ className = "", ...props }: CardProps) {
-  return <div className={`rounded-2xl border border-slate-800 bg-slate-900/60 ${className}`} {...props} />;
+  return <div className={`rounded-2xl border border-slate-200 bg-white shadow-sm ${className}`} {...props} />;
 }
 
 export function CardHeader({ className = "", ...props }: CardHeaderProps) {
@@ -17,7 +17,7 @@ export function CardHeader({ className = "", ...props }: CardHeaderProps) {
 }
 
 export function CardTitle({ className = "", ...props }: CardTitleProps) {
-  return <p className={`text-lg font-semibold leading-tight ${className}`} {...props} />;
+  return <p className={`text-lg font-semibold leading-tight text-slate-800 ${className}`} {...props} />;
 }
 
 export function CardContent({ className = "", ...props }: CardContentProps) {
