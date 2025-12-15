@@ -525,13 +525,13 @@ const SelectionInfo = ({
 }: any) => (
   <Card className="bg-white/90 border-slate-200 shadow-xl">
     <CardHeader>
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-2">
         <div>
           <p className="text-xs uppercase tracking-[0.18em] text-slate-500">SVG Overview</p>
           <CardTitle className="text-xl font-semibold text-slate-900">{svgStats.name || "Untitled"}</CardTitle>
           <p className="text-sm text-slate-600">{svgStats.message || "Click a shape to annotate it."}</p>
         </div>
-        <div className="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700">
+        <div className="flex items-center gap-2 bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700 self-start sm:self-auto">
           <Switch checked={editMode} onCheckedChange={setEditMode} />
           <div>
             <div className="font-semibold text-slate-900">{editMode ? "Edit" : "View"}</div>
